@@ -138,29 +138,6 @@ Copies from the real run are kept in `results/`.
 - Multiple imputation assumes missing at random and omits design variables; the Lasso retains a missing-BMI indicator, a warning sign.
 - No external validation and no subgroup calibration check.
 
-## Testing status
-
-- Verified on the real NHANES data (run in Colab): the full notebook, including the R cross-check for both models.
-  The later targeting-metric fix was re-checked by re-running the prediction step on the exported analysis data in a separate
-  environment; the updated prediction cells have not yet been re-run in Colab, so expect small differences in the targeting figures.
-- Verified by unit-style tests in plain numpy: the design-based variance code (matches standard robust formulas,
-  a brute-force weighted/stratified calculation, and is invariant to weight scaling).
-- Not verified: `main.py` has not been run end to end on real data (the notebook is the tested path);
-  the NFHS-5 option has only been smoke-tested on synthetic data.
-
-## Fixed along the way
-
-- statsmodels' robust SEs are unsupported with `freq_weights`: replaced with design-based variance (`design.py`).
-- Targeting reach was originally computed on the top 20% of respondents, not of the weighted population: corrected.
-- Cook's distance for WLS used a method that does not exist on WLS results: now uses `OLSInfluence`.
-- OLS p-values now use design df (t) instead of a normal approximation.
-
-## Using NFHS-5 instead (optional)
-
-`python main.py nfhs5` runs the same pipeline on child stunting if you place the DHS Kids Recode (Stata) at
-`data/IAKR7DFL.DTA` (requires a free DHS login; verify the toilet-facility recode against the DHS-7 manual).
-Without the file it falls back to synthetic data, which is for code testing only.
-
 ## References
 
 NCHS, *NHANES Analytic Guidelines* and the 2017-2018 documentation (weights, strata, PSU); T. Lumley, the R `survey` package.
